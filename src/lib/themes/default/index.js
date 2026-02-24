@@ -1,103 +1,105 @@
 const blockColors = {
     motion: {
-        primary: '#4C97FF',
-        secondary: '#4280D7',
-        tertiary: '#3373CC',
-        quaternary: '#3373CC'
+        primary: '#4D8BFF',    /* Bleu électrique vif */
+        secondary: '#3A78F0',
+        tertiary: '#2860D0',
+        quaternary: '#2860D0'
     },
     looks: {
-        primary: '#9966FF',
-        secondary: '#855CD6',
-        tertiary: '#774DCB',
-        quaternary: '#774DCB'
+        primary: '#CC44FF',    /* Violet néon */
+        secondary: '#BB33EE',
+        tertiary: '#9922CC',
+        quaternary: '#9922CC'
     },
     sounds: {
-        primary: '#CF63CF',
-        secondary: '#C94FC9',
-        tertiary: '#BD42BD',
-        quaternary: '#BD42BD'
+        primary: '#FF44CC',    /* Rose magenta */
+        secondary: '#EE33BB',
+        tertiary: '#CC2299',
+        quaternary: '#CC2299'
     },
     control: {
-        primary: '#FFAB19',
-        secondary: '#EC9C13',
-        tertiary: '#CF8B17',
-        quaternary: '#CF8B17'
+        primary: '#FF8800',    /* Orange feu */
+        secondary: '#EE7700',
+        tertiary: '#CC5500',
+        quaternary: '#CC5500'
     },
     event: {
-        primary: '#FFBF00',
-        secondary: '#E6AC00',
-        tertiary: '#CC9900',
-        quaternary: '#CC9900'
+        primary: '#FFD700',    /* Or néon */
+        secondary: '#EEC600',
+        tertiary: '#CCA000',
+        quaternary: '#CCA000'
     },
     sensing: {
-        primary: '#5CB1D6',
-        secondary: '#47A8D1',
-        tertiary: '#2E8EB8',
-        quaternary: '#2E8EB8'
+        primary: '#00CFFF',    /* Cyan électrique */
+        secondary: '#00BBEE',
+        tertiary: '#0099CC',
+        quaternary: '#0099CC'
     },
     pen: {
-        primary: '#0fBD8C',
-        secondary: '#0DA57A',
-        tertiary: '#0B8E69',
-        quaternary: '#0B8E69'
+        primary: '#00FF88',    /* Vert émeraude néon */
+        secondary: '#00EE77',
+        tertiary: '#00CC55',
+        quaternary: '#00CC55'
     },
     operators: {
-        primary: '#59C059',
-        secondary: '#46B946',
-        tertiary: '#389438',
-        quaternary: '#389438'
+        primary: '#44FF44',    /* Vert acide */
+        secondary: '#33EE33',
+        tertiary: '#22CC22',
+        quaternary: '#22CC22'
     },
     data: {
-        primary: '#FF8C1A',
-        secondary: '#FF8000',
-        tertiary: '#DB6E00',
-        quaternary: '#DB6E00'
+        primary: '#FF6600',    /* Orange data */
+        secondary: '#EE5500',
+        tertiary: '#CC3300',
+        quaternary: '#CC3300'
     },
-    // This is not a new category, but rather for differentiation
-    // between lists and scalar variables.
     data_lists: {
-        primary: '#FF661A',
-        secondary: '#FF5500',
-        tertiary: '#E64D00',
-        quaternary: '#E64D00'
+        primary: '#FF4400',
+        secondary: '#EE3300',
+        tertiary: '#CC2200',
+        quaternary: '#CC2200'
     },
     more: {
-        primary: '#FF6680',
-        secondary: '#FF4D6A',
-        tertiary: '#FF3355',
-        quaternary: '#FF3355'
+        primary: '#FF00FF',    /* Rose électrique pur */
+        secondary: '#EE00EE',
+        tertiary: '#CC00CC',
+        quaternary: '#CC00CC'
     },
     text: '#FFFFFF',
-    workspace: '#F9F9F9',
-    toolboxHover: '#4C97FF',
-    toolboxSelected: '#E9EEF2',
-    toolboxText: '#575E75',
-    toolbox: '#FFFFFF',
-    flyout: '#F9F9F9',
-    scrollbar: '#CECDCE',
-    scrollbarHover: '#CECDCE',
-    textField: '#FFFFFF',
-    textFieldText: '#575E75',
-    insertionMarker: '#000000',
-    insertionMarkerOpacity: 0.2,
-    dragShadowOpacity: 0.6,
-    stackGlow: '#FFF200',
-    stackGlowSize: 4,
+
+    /* =============================================
+       THÈME NÉON GALACTIQUE — fond quasi noir
+       ============================================= */
+    workspace: '#0B0E14',
+    flyout: '#080A12',
+    toolbox: '#06080F',
+    toolboxHover: '#FF00FF',
+    toolboxSelected: '#1a0030',
+    toolboxText: '#c8d8f0',
+    scrollbar: '#1a0a2a',
+    scrollbarHover: '#FF00FF',
+    textField: '#0d0a20',
+    textFieldText: '#ffffff',
+
+    insertionMarker: '#ffffff',
+    insertionMarkerOpacity: 0.6,
+    dragShadowOpacity: 0.85,
+    stackGlow: '#00FF88',
+    stackGlowSize: 6,
     stackGlowOpacity: 1,
-    replacementGlow: '#FFFFFF',
-    replacementGlowSize: 2,
+    replacementGlow: '#FF00FF',
+    replacementGlowSize: 3,
     replacementGlowOpacity: 1,
     colourPickerStroke: '#FFFFFF',
-    // CSS colours: support RGBA
-    fieldShadow: 'rgba(255, 255, 255, 0.3)',
-    dropDownShadow: 'rgba(0, 0, 0, .3)',
-    numPadBackground: '#547AB2',
-    numPadBorder: '#435F91',
-    numPadActiveBackground: '#435F91',
-    numPadText: 'white', // Do not use hex here, it cannot be inlined with data-uri SVG
-    valueReportBackground: '#FFFFFF',
-    valueReportBorder: '#AAAAAA',
-    menuHover: 'rgba(0, 0, 0, 0.2)'
+    fieldShadow: 'rgba(255, 0, 255, 0.3)',
+    dropDownShadow: 'rgba(0, 0, 0, 0.7)',
+    numPadBackground: '#080a14',
+    numPadBorder: '#FF00FF44',
+    numPadActiveBackground: '#1a0030',
+    numPadText: 'white',
+    valueReportBackground: '#0B0E14',
+    valueReportBorder: '#00FF88',
+    menuHover: 'rgba(255, 0, 255, 0.15)'
 };
 
 export {

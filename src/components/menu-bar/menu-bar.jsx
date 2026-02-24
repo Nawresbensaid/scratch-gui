@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import {connect} from 'react-redux';
-import {compose} from 'redux';
-import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import bindAll from 'lodash.bindall';
 import bowser from 'bowser';
@@ -13,12 +13,12 @@ import Box from '../box/box.jsx';
 import Button from '../button/button.jsx';
 import CommunityButton from './community-button.jsx';
 import ShareButton from './share-button.jsx';
-import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
+import { ComingSoonTooltip } from '../coming-soon/coming-soon.jsx';
 import Divider from '../divider/divider.jsx';
 import SaveStatus from './save-status.jsx';
 import ProjectWatcher from '../../containers/project-watcher.jsx';
 import MenuBarMenu from './menu-bar-menu.jsx';
-import {MenuItem, MenuSection} from '../menu/menu.jsx';
+import { MenuItem, MenuSection } from '../menu/menu.jsx';
 import ProjectTitleInput from './project-title-input.jsx';
 import AuthorInfo from './author-info.jsx';
 import AccountNav from '../../containers/account-nav.jsx';
@@ -29,8 +29,8 @@ import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
-import {openTipsLibrary, openDebugModal} from '../../reducers/modals';
-import {setPlayer} from '../../reducers/mode';
+import { openTipsLibrary, openDebugModal } from '../../reducers/modals';
+import { setPlayer } from '../../reducers/mode';
 import {
     isTimeTravel220022BC,
     isTimeTravel1920,
@@ -94,6 +94,209 @@ import oldtimeyLogo from './oldtimey-logo.svg';
 
 import sharedMessages from '../../lib/shared-messages';
 
+/* =============================================
+   THÈME SOMBRE / TECH — Styles inline
+   ============================================= */
+const darkTheme = {
+    menuBar: {
+        background: 'rgba(8, 15, 40, 0.45)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        borderBottom: '1px solid rgba(108,190,255,0.18)',
+        boxShadow: '0 4px 32px rgba(0,0,0,0.3), 0 1px 0 rgba(108,190,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)',
+        color: '#e2d9f3',
+    },
+    menuBarItem: {
+        color: '#6bceff',
+        transition: 'all 0.2s ease',
+    },
+};
+
+/* Icônes SVG inline — pas besoin de Lucide */
+const IconBot = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6bceff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="10" rx="2" /><circle cx="12" cy="5" r="2" />
+        <line x1="12" y1="7" x2="12" y2="11" /><line x1="8" y1="15" x2="8" y2="15" />
+        <line x1="16" y1="15" x2="16" y2="15" />
+    </svg>
+);
+const IconMenu = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+        <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+);
+const IconX = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+);
+const IconBook = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+);
+const IconBug = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M8 2l1.5 1.5" /><path d="M14.5 3.5L16 2" /><path d="M9 9h6" /><path d="M9 12h6" />
+        <path d="M12 3a4 4 0 0 0-4 4v5a4 4 0 0 0 8 0V7a4 4 0 0 0-4-4z" />
+        <path d="M5 8H3" /><path d="M21 8h-2" /><path d="M5 16H3" /><path d="M21 16h-2" />
+    </svg>
+);
+const IconTrophy = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+        <path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+    </svg>
+);
+const IconStar = () => (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+);
+const IconZap = () => (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+);
+
+/* CSS hover animations injecté une fois */
+const navbarCSS = `
+.nb-btn {
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 13px;
+    background: rgba(108,190,255,0.07);
+    border: 1px solid rgba(108,190,255,0.2);
+    border-radius: 10px;
+    color: #8dd4f0;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(.4,0,.2,1);
+    position: relative; overflow: hidden;
+}
+.nb-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(108,190,255,0.15), rgba(192,132,252,0.1));
+    opacity: 0; transition: opacity 0.22s;
+    border-radius: 10px;
+}
+.nb-btn:hover { 
+    color: #ffffff;
+    border-color: rgba(108,190,255,0.55);
+    box-shadow: 0 0 16px rgba(108,190,255,0.25), 0 2px 8px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
+}
+.nb-btn:hover::before { opacity: 1; }
+.nb-btn:active { transform: translateY(0px) scale(0.97); }
+
+.nb-btn-open {
+    background: linear-gradient(135deg, rgba(108,190,255,0.22), rgba(192,132,252,0.18)) !important;
+    border-color: rgba(108,190,255,0.5) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(108,190,255,0.3) !important;
+}
+
+.nb-menu-item {
+    display: flex; align-items: center; gap: 9px;
+    width: 100%; padding: 9px 12px;
+    background: transparent; border: none;
+    border-radius: 8px; color: #c8d8f0;
+    font-size: 13px; text-align: left; cursor: pointer;
+    transition: all 0.18s ease;
+}
+.nb-menu-item:hover {
+    background: rgba(108,190,255,0.12);
+    color: #ffffff;
+    padding-left: 16px;
+}
+.nb-section-label {
+    color: rgba(108,190,255,0.5);
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 6px 12px 4px;
+}
+.nb-divider { height: 1px; background: rgba(108,190,255,0.1); margin: 5px 8px; }
+
+
+/* === SCORE & LEVEL === */
+@keyframes scoreUp {
+    0%   { transform: translateY(0) scale(1); }
+    50%  { transform: translateY(-4px) scale(1.15); }
+    100% { transform: translateY(0) scale(1); }
+}
+@keyframes levelUp {
+    0%   { box-shadow: 0 0 8px #FFD700; }
+    50%  { box-shadow: 0 0 24px #FFD700, 0 0 48px #FFD700; }
+    100% { box-shadow: 0 0 8px #FFD700; }
+}
+.score-badge {
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 12px;
+    background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 10px;
+    color: #FFD700;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    font-family: monospace;
+    transition: all 0.3s ease;
+}
+.score-badge:hover { background: rgba(255,215,0,0.15); border-color: rgba(255,215,0,0.6); }
+.level-badge {
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 12px;
+    background: rgba(255,0,255,0.08);
+    border: 1px solid rgba(255,0,255,0.3);
+    border-radius: 10px;
+    color: #FF00FF;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    animation: levelUp 3s ease-in-out infinite;
+}
+.leaderboard-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 1000;
+    background: rgba(8,10,28,0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,215,0,0.25);
+    border-radius: 14px;
+    padding: 12px;
+    min-width: 260px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+}
+.lb-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 8px;
+    transition: background 0.15s;
+    cursor: default;
+}
+.lb-row:hover { background: rgba(255,215,0,0.06); }
+.lb-rank {
+    width: 22px; text-align: center;
+    font-size: 13px; font-weight: 800; font-family: monospace;
+}
+.lb-name { flex: 1; font-size: 12px; color: #c8d8f0; font-weight: 600; }
+.lb-score { font-size: 12px; color: #FFD700; font-weight: 700; font-family: monospace; }
+
+.nb-title {
+    font-size: 14px; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #6bceff 0%, #a78bfa 50%, #f472b6 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(108,190,255,0.4));
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 14px;
+    animation: titlePulse 4s ease-in-out infinite;
+}
+@keyframes titlePulse {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(108,190,255,0.3)); }
+    50% { filter: drop-shadow(0 0 14px rgba(192,132,252,0.5)); }
+}
+`;
+
 const ariaMessages = defineMessages({
     tutorials: {
         id: 'gui.menuBar.tutorialsLibrary',
@@ -142,7 +345,7 @@ MenuBarItemTooltip.propTypes = {
     place: PropTypes.oneOf(['top', 'bottom', 'left', 'right'])
 };
 
-const MenuItemTooltip = ({id, isRtl, children, className}) => (
+const MenuItemTooltip = ({ id, isRtl, children, className }) => (
     <ComingSoonTooltip
         className={classNames(styles.comingSoon, className)}
         isRtl={isRtl}
@@ -174,11 +377,45 @@ AboutButton.propTypes = {
     onClick: PropTypes.func.isRequired
 };
 
+
+const sectionLabel = {
+    color: 'rgba(108,190,255,0.6)',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    padding: '4px 10px 6px',
+};
+const menuBtnStyle = {
+    display: 'block',
+    width: '100%',
+    padding: '8px 12px',
+    background: 'transparent',
+    border: 'none',
+    borderRadius: '6px',
+    color: '#e2d9f3',
+    fontSize: '13px',
+    textAlign: 'left',
+    cursor: 'pointer',
+};
+const dividerStyle = {
+    height: '1px',
+    background: 'rgba(108,190,255,0.15)',
+    margin: '6px 8px',
+};
+
 class MenuBar extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
+        this.state = {
+            hamburgerOpen: false,
+            leaderboardOpen: false,
+            score: 8750,
+            level: 3,
+        };
         bindAll(this, [
             'handleClickNew',
+            'closeLeaderboard',
             'handleClickRemix',
             'handleClickSave',
             'handleClickSaveAsCopy',
@@ -188,21 +425,29 @@ class MenuBar extends React.Component {
             'handleKeyPress',
             'handleRestoreOption',
             'getSaveToComputerHandler',
-            'restoreOptionMessage'
+            'restoreOptionMessage',
+            'toggleHamburger',
+            'closeHamburger'
         ]);
     }
-    componentDidMount () {
+    componentDidMount() {
         document.addEventListener('keydown', this.handleKeyPress);
     }
-    componentWillUnmount () {
+    componentWillUnmount() {
         document.removeEventListener('keydown', this.handleKeyPress);
     }
-    handleClickNew () {
-        // if the project is dirty, and user owns the project, we will autosave.
-        // but if they are not logged in and can't save, user should consider
-        // downloading or logging in first.
-        // Note that if user is logged in and editing someone else's project,
-        // they'll lose their work.
+    toggleHamburger(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setState(s => ({ hamburgerOpen: !s.hamburgerOpen }));
+    }
+    closeHamburger() {
+        this.setState({ hamburgerOpen: false });
+    }
+    closeLeaderboard() {
+        this.setState({ leaderboardOpen: false });
+    }
+    handleClickNew() {
         const readyToReplaceProject = this.props.confirmReadyToReplaceProject(
             this.props.intl.formatMessage(sharedMessages.replaceProjectWarning)
         );
@@ -212,42 +457,41 @@ class MenuBar extends React.Component {
         }
         this.props.onRequestCloseFile();
     }
-    handleClickRemix () {
+    handleClickRemix() {
         this.props.onClickRemix();
         this.props.onRequestCloseFile();
     }
-    handleClickSave () {
+    handleClickSave() {
         this.props.onClickSave();
         this.props.onRequestCloseFile();
     }
-    handleClickSaveAsCopy () {
+    handleClickSaveAsCopy() {
         this.props.onClickSaveAsCopy();
         this.props.onRequestCloseFile();
     }
-    handleClickSeeCommunity (waitForUpdate) {
+    handleClickSeeCommunity(waitForUpdate) {
         if (this.props.shouldSaveBeforeTransition()) {
-            this.props.autoUpdateProject(); // save before transitioning to project page
-            waitForUpdate(true); // queue the transition to project page
+            this.props.autoUpdateProject();
+            waitForUpdate(true);
         } else {
-            waitForUpdate(false); // immediately transition to project page
+            waitForUpdate(false);
         }
     }
-    handleClickShare (waitForUpdate) {
+    handleClickShare(waitForUpdate) {
         if (!this.props.isShared) {
-            if (this.props.canShare) { // save before transitioning to project page
+            if (this.props.canShare) {
                 this.props.onShare();
             }
-            if (this.props.canSave) { // save before transitioning to project page
+            if (this.props.canSave) {
                 this.props.autoUpdateProject();
-                waitForUpdate(true); // queue the transition to project page
+                waitForUpdate(true);
             } else {
-                waitForUpdate(false); // immediately transition to project page
+                waitForUpdate(false);
             }
         }
     }
-    handleSetMode (mode) {
+    handleSetMode(mode) {
         return () => {
-            // Turn on/off filters for modes.
             if (mode === '1920') {
                 document.documentElement.style.filter = 'brightness(.9)contrast(.8)sepia(1.0)';
                 document.documentElement.style.height = '100%';
@@ -259,7 +503,6 @@ class MenuBar extends React.Component {
                 document.documentElement.style.height = '';
             }
 
-            // Change logo for modes
             if (mode === '1990') {
                 document.getElementById('logo_img').src = ninetiesLogo;
             } else if (mode === '2020') {
@@ -275,20 +518,20 @@ class MenuBar extends React.Component {
             this.props.onSetTimeTravelMode(mode);
         };
     }
-    handleRestoreOption (restoreFun) {
+    handleRestoreOption(restoreFun) {
         return () => {
             restoreFun();
             this.props.onRequestCloseEdit();
         };
     }
-    handleKeyPress (event) {
+    handleKeyPress(event) {
         const modifier = bowser.mac ? event.metaKey : event.ctrlKey;
         if (modifier && event.key === 's') {
             this.props.onClickSave();
             event.preventDefault();
         }
     }
-    getSaveToComputerHandler (downloadProjectCallback) {
+    getSaveToComputerHandler(downloadProjectCallback) {
         return () => {
             this.props.onRequestCloseFile();
             downloadProjectCallback();
@@ -298,47 +541,42 @@ class MenuBar extends React.Component {
             }
         };
     }
-    restoreOptionMessage (deletedItem) {
+    restoreOptionMessage(deletedItem) {
         switch (deletedItem) {
-        case 'Sprite':
-            return (<FormattedMessage
-                defaultMessage="Restore Sprite"
-                description="Menu bar item for restoring the last deleted sprite."
-                id="gui.menuBar.restoreSprite"
-            />);
-        case 'Sound':
-            return (<FormattedMessage
-                defaultMessage="Restore Sound"
-                description="Menu bar item for restoring the last deleted sound."
-                id="gui.menuBar.restoreSound"
-            />);
-        case 'Costume':
-            return (<FormattedMessage
-                defaultMessage="Restore Costume"
-                description="Menu bar item for restoring the last deleted costume."
-                id="gui.menuBar.restoreCostume"
-            />);
-        default: {
-            return (<FormattedMessage
-                defaultMessage="Restore"
-                description="Menu bar item for restoring the last deleted item in its disabled state." /* eslint-disable-line max-len */
-                id="gui.menuBar.restore"
-            />);
-        }
+            case 'Sprite':
+                return (<FormattedMessage
+                    defaultMessage="Restore Sprite"
+                    description="Menu bar item for restoring the last deleted sprite."
+                    id="gui.menuBar.restoreSprite"
+                />);
+            case 'Sound':
+                return (<FormattedMessage
+                    defaultMessage="Restore Sound"
+                    description="Menu bar item for restoring the last deleted sound."
+                    id="gui.menuBar.restoreSound"
+                />);
+            case 'Costume':
+                return (<FormattedMessage
+                    defaultMessage="Restore Costume"
+                    description="Menu bar item for restoring the last deleted costume."
+                    id="gui.menuBar.restoreCostume"
+                />);
+            default: {
+                return (<FormattedMessage
+                    defaultMessage="Restore"
+                    description="Menu bar item for restoring the last deleted item in its disabled state."
+                    id="gui.menuBar.restore"
+                />);
+            }
         }
     }
-    buildAboutMenu (onClickAbout) {
+    buildAboutMenu(onClickAbout) {
         if (!onClickAbout) {
-            // hide the button
             return null;
         }
         if (typeof onClickAbout === 'function') {
-            // make a button which calls a function
             return <AboutButton onClick={onClickAbout} />;
         }
-        // assume it's an array of objects
-        // each item must have a 'title' FormattedMessage and a 'handleClick' function
-        // generate a menu with items for each object in the array
         return (
             <div
                 className={classNames(styles.menuBarItem, styles.hoverable, {
@@ -351,9 +589,9 @@ class MenuBar extends React.Component {
                     src={aboutIcon}
                 />
                 <MenuBarMenu
-                    className={classNames(styles.menuBarMenu)}
+                    className={styles.menuBarMenu}
                     open={this.props.aboutMenuOpen}
-                    place={this.props.isRtl ? 'right' : 'left'}
+                    place={this.props.isRtl ? 'left' : 'right'}
                     onRequestClose={this.props.onRequestCloseAbout}
                 >
                     {
@@ -371,13 +609,13 @@ class MenuBar extends React.Component {
             </div>
         );
     }
-    wrapAboutMenuCallback (callback) {
+    wrapAboutMenuCallback(callback) {
         return () => {
             callback();
             this.props.onRequestCloseAbout();
         };
     }
-    render () {
+    render() {
         const saveNowMessage = (
             <FormattedMessage
                 defaultMessage="Save now"
@@ -419,440 +657,138 @@ class MenuBar extends React.Component {
                 {remixMessage}
             </Button>
         );
-        // Show the About button only if we have a handler for it (like in the desktop app)
         const aboutButton = this.buildAboutMenu(this.props.onClickAbout);
         return (
             <Box
-                className={classNames(
-                    this.props.className,
-                    styles.menuBar
-                )}
+                className={classNames(this.props.className, styles.menuBar)}
+                style={darkTheme.menuBar}
             >
+                <style>{navbarCSS}</style>
                 <div className={styles.mainMenu}>
-                    <div className={styles.fileGroup}>
-                        <div className={classNames(styles.menuBarItem)}>
-                            <img
-                                id="logo_img"
-                                alt="Scratch"
-                                className={classNames(styles.scratchLogo, {
-                                    [styles.clickable]: typeof this.props.onClickLogo !== 'undefined'
-                                })}
-                                draggable={false}
-                                src={this.props.logo}
-                                onClick={this.props.onClickLogo}
-                            />
-                        </div>
-                        {(this.props.canChangeTheme || this.props.canChangeLanguage) && (<SettingsMenu
-                            canChangeLanguage={this.props.canChangeLanguage}
-                            canChangeTheme={this.props.canChangeTheme}
-                            isRtl={this.props.isRtl}
-                            onRequestClose={this.props.onRequestCloseSettings}
-                            onRequestOpen={this.props.onClickSettings}
-                            settingsMenuOpen={this.props.settingsMenuOpen}
-                        />)}
-                        {(this.props.canManageFiles) && (
-                            <div
-                                className={classNames(styles.menuBarItem, styles.hoverable, {
-                                    [styles.active]: this.props.fileMenuOpen
-                                })}
-                                onMouseUp={this.props.onClickFile}
-                            >
-                                <img src={fileIcon} />
-                                <span className={styles.collapsibleLabel}>
-                                    <FormattedMessage
-                                        defaultMessage="File"
-                                        description="Text for file dropdown menu"
-                                        id="gui.menuBar.file"
-                                    />
-                                </span>
-                                <img src={dropdownCaret} />
-                                <MenuBarMenu
-                                    className={classNames(styles.menuBarMenu)}
-                                    open={this.props.fileMenuOpen}
-                                    place={this.props.isRtl ? 'left' : 'right'}
-                                    onRequestClose={this.props.onRequestCloseFile}
-                                >
-                                    <MenuSection>
-                                        <MenuItem
-                                            isRtl={this.props.isRtl}
-                                            onClick={this.handleClickNew}
-                                        >
-                                            {newProjectMessage}
-                                        </MenuItem>
-                                    </MenuSection>
-                                    {(this.props.canSave || this.props.canCreateCopy || this.props.canRemix) && (
-                                        <MenuSection>
-                                            {this.props.canSave && (
-                                                <MenuItem onClick={this.handleClickSave}>
-                                                    {saveNowMessage}
-                                                </MenuItem>
-                                            )}
-                                            {this.props.canCreateCopy && (
-                                                <MenuItem onClick={this.handleClickSaveAsCopy}>
-                                                    {createCopyMessage}
-                                                </MenuItem>
-                                            )}
-                                            {this.props.canRemix && (
-                                                <MenuItem onClick={this.handleClickRemix}>
-                                                    {remixMessage}
-                                                </MenuItem>
-                                            )}
-                                        </MenuSection>
-                                    )}
-                                    <MenuSection>
-                                        <MenuItem
-                                            onClick={this.props.onStartSelectingFileUpload}
-                                        >
-                                            {this.props.intl.formatMessage(sharedMessages.loadFromComputerTitle)}
-                                        </MenuItem>
-                                        <SB3Downloader>{(className, downloadProjectCallback) => (
-                                            <MenuItem
-                                                className={className}
-                                                onClick={this.getSaveToComputerHandler(downloadProjectCallback)}
-                                            >
-                                                <FormattedMessage
-                                                    defaultMessage="Save to your computer"
-                                                    description="Menu bar item for downloading a project to your computer" // eslint-disable-line max-len
-                                                    id="gui.menuBar.downloadToComputer"
-                                                />
-                                            </MenuItem>
-                                        )}</SB3Downloader>
-                                    </MenuSection>
-                                </MenuBarMenu>
-                            </div>
-                        )}
-                        <div
-                            className={classNames(styles.menuBarItem, styles.hoverable, {
-                                [styles.active]: this.props.editMenuOpen
-                            })}
-                            onMouseUp={this.props.onClickEdit}
-                        >
-                            <img src={editIcon} />
-                            <span className={styles.collapsibleLabel}>
-                                <FormattedMessage
-                                    defaultMessage="Edit"
-                                    description="Text for edit dropdown menu"
-                                    id="gui.menuBar.edit"
-                                />
-                            </span>
-                            <img src={dropdownCaret} />
-                            <MenuBarMenu
-                                className={classNames(styles.menuBarMenu)}
-                                open={this.props.editMenuOpen}
-                                place={this.props.isRtl ? 'left' : 'right'}
-                                onRequestClose={this.props.onRequestCloseEdit}
-                            >
-                                <DeletionRestorer>{(handleRestore, {restorable, deletedItem}) => (
-                                    <MenuItem
-                                        className={classNames({[styles.disabled]: !restorable})}
-                                        onClick={this.handleRestoreOption(handleRestore)}
-                                    >
-                                        {this.restoreOptionMessage(deletedItem)}
-                                    </MenuItem>
-                                )}</DeletionRestorer>
-                                <MenuSection>
-                                    <TurboMode>{(toggleTurboMode, {turboMode}) => (
-                                        <MenuItem onClick={toggleTurboMode}>
-                                            {turboMode ? (
-                                                <FormattedMessage
-                                                    defaultMessage="Turn off Turbo Mode"
-                                                    description="Menu bar item for turning off turbo mode"
-                                                    id="gui.menuBar.turboModeOff"
-                                                />
-                                            ) : (
-                                                <FormattedMessage
-                                                    defaultMessage="Turn on Turbo Mode"
-                                                    description="Menu bar item for turning on turbo mode"
-                                                    id="gui.menuBar.turboModeOn"
-                                                />
-                                            )}
-                                        </MenuItem>
-                                    )}</TurboMode>
-                                </MenuSection>
-                            </MenuBarMenu>
 
-                        </div>
-                        {this.props.isTotallyNormal && (
-                            <div
-                                className={classNames(styles.menuBarItem, styles.hoverable, {
-                                    [styles.active]: this.props.modeMenuOpen
-                                })}
-                                onMouseUp={this.props.onClickMode}
-                            >
-                                <div className={classNames(styles.editMenu)}>
-                                    <FormattedMessage
-                                        defaultMessage="Mode"
-                                        description="Mode menu item in the menu bar"
-                                        id="gui.menuBar.modeMenu"
-                                    />
-                                </div>
-                                <MenuBarMenu
-                                    className={classNames(styles.menuBarMenu)}
-                                    open={this.props.modeMenuOpen}
-                                    place={this.props.isRtl ? 'left' : 'right'}
-                                    onRequestClose={this.props.onRequestCloseMode}
-                                >
-                                    <MenuSection>
-                                        <MenuItem onClick={this.handleSetMode('NOW')}>
-                                            <span className={classNames({[styles.inactive]: !this.props.modeNow})}>
-                                                {'✓'}
-                                            </span>
-                                            {' '}
-                                            <FormattedMessage
-                                                defaultMessage="Normal mode"
-                                                description="April fools: resets editor to not have any pranks"
-                                                id="gui.menuBar.normalMode"
-                                            />
-                                        </MenuItem>
-                                        <MenuItem onClick={this.handleSetMode('2020')}>
-                                            <span className={classNames({[styles.inactive]: !this.props.mode2020})}>
-                                                {'✓'}
-                                            </span>
-                                            {' '}
-                                            <FormattedMessage
-                                                defaultMessage="Caturday mode"
-                                                description="April fools: Cat blocks mode"
-                                                id="gui.menuBar.caturdayMode"
-                                            />
-                                        </MenuItem>
-                                    </MenuSection>
-                                </MenuBarMenu>
-                            </div>
-                        )}
-                    </div>
-                    {this.props.canEditTitle ? (
-                        <div className={classNames(styles.menuBarItem, styles.growable)}>
-                            <MenuBarItemTooltip
-                                enable
-                                id="title-field"
-                            >
-                                <ProjectTitleInput
-                                    className={classNames(styles.titleFieldGrowable)}
-                                />
-                            </MenuBarItemTooltip>
-                        </div>
-                    ) : ((this.props.authorUsername && this.props.authorUsername !== this.props.username) ? (
-                        <AuthorInfo
-                            className={styles.authorInfo}
-                            imageUrl={this.props.authorThumbnailUrl}
-                            projectTitle={this.props.projectTitle}
-                            userId={this.props.authorId}
-                            username={this.props.authorUsername}
-                        />
-                    ) : null)}
-                    <div className={classNames(styles.menuBarItem)}>
-                        {this.props.canShare ? (
-                            (this.props.isShowingProject || this.props.isUpdating) && (
-                                <ProjectWatcher onDoneUpdating={this.props.onSeeCommunity}>
-                                    {
-                                        waitForUpdate => (
-                                            <ShareButton
-                                                className={styles.menuBarButton}
-                                                isShared={this.props.isShared}
-                                                /* eslint-disable react/jsx-no-bind */
-                                                onClick={() => {
-                                                    this.handleClickShare(waitForUpdate);
-                                                }}
-                                                /* eslint-enable react/jsx-no-bind */
-                                            />
-                                        )
-                                    }
-                                </ProjectWatcher>
-                            )
-                        ) : (
-                            this.props.showComingSoon ? (
-                                <MenuBarItemTooltip id="share-button">
-                                    <ShareButton className={styles.menuBarButton} />
-                                </MenuBarItemTooltip>
-                            ) : []
-                        )}
-                        {this.props.canRemix ? remixButton : []}
-                    </div>
-                    <div className={classNames(styles.menuBarItem, styles.communityButtonWrapper)}>
-                        {this.props.enableCommunity ? (
-                            (this.props.isShowingProject || this.props.isUpdating) && (
-                                <ProjectWatcher onDoneUpdating={this.props.onSeeCommunity}>
-                                    {
-                                        waitForUpdate => (
-                                            <CommunityButton
-                                                className={styles.menuBarButton}
-                                                /* eslint-disable react/jsx-no-bind */
-                                                onClick={() => {
-                                                    this.handleClickSeeCommunity(waitForUpdate);
-                                                }}
-                                                /* eslint-enable react/jsx-no-bind */
-                                            />
-                                        )
-                                    }
-                                </ProjectWatcher>
-                            )
-                        ) : (this.props.showComingSoon ? (
-                            <MenuBarItemTooltip id="community-button">
-                                <CommunityButton className={styles.menuBarButton} />
-                            </MenuBarItemTooltip>
-                        ) : [])}
-                    </div>
-                    <Divider className={classNames(styles.divider)} />
+                    {/* GAUCHE — TITRE */}
                     <div className={styles.fileGroup}>
-                        <div
-                            aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
-                            className={
-                                classNames(styles.menuBarItem, styles.noOffset, styles.hoverable, 'tutorials-button')
-                            }
-                            onClick={this.props.onOpenTipLibrary}
-                        >
-                            <img
-                                className={styles.helpIcon}
-                                src={helpIcon}
-                            />
-                            <span className={styles.tutorialsLabel}>
-                                <FormattedMessage {...ariaMessages.tutorials} />
-                            </span>
+                        <div className="nb-title">
+                            <IconBot />
+                            NomadVerse
                         </div>
-                        <div
-                            aria-label={this.props.intl.formatMessage(ariaMessages.debug)}
-                            className={classNames(styles.menuBarItem, styles.noOffset, styles.hoverable)}
-                            onClick={this.props.onOpenDebugModal}
-                        >
-                            <img
-                                className={styles.helpIcon}
-                                src={debugIcon}
-                            />
-                            <span className={styles.debugLabel}>
-                                <FormattedMessage {...ariaMessages.debug} />
-                            </span>
+                    </div>
+
+
+
+                    {/* CENTRE — LEVEL + SCORE */}
+                    <div style={{
+                        position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+                        display: 'flex', alignItems: 'center', gap: '10px',
+                        pointerEvents: 'none',
+                    }}>
+                        <div className="level-badge" style={{ pointerEvents: 'auto' }}>
+                            <IconZap />
+                            <span>Level</span>
                         </div>
+                        <div className="score-badge" style={{ pointerEvents: 'auto' }}>
+                            <IconStar />
+                            <span>Score</span>
+                        </div>
+                    </div>
+
+                    {/* DROITE — TUTORIELS | DEBUG | MENU */}
+                    <div className={styles.fileGroup} style={{ marginLeft: 'auto', gap: '6px', alignItems: 'center' }}>
+
+                        <button className="nb-btn" onClick={this.props.onOpenTipLibrary} title="Tutoriels">
+                            <IconBook />
+                            <span>Tutoriels</span>
+                        </button>
+
+                        <button className="nb-btn" onClick={this.props.onOpenDebugModal} title="Debug">
+                            <IconBug />
+                            <span>Debug</span>
+                        </button>
+
+                        {/* MENU — déplacé à droite */}
+                        <div
+                            style={{ position: 'relative' }}
+                            tabIndex={-1}
+                            onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) this.closeHamburger(); }}
+                        >
+                            <button
+                                onClick={this.toggleHamburger}
+                                className={`nb-btn ${this.state.hamburgerOpen ? 'nb-btn-open' : ''}`}
+                            >
+                                {this.state.hamburgerOpen ? <IconX /> : <IconMenu />}
+                                <span>Menu</span>
+                            </button>
+
+                            {this.state.hamburgerOpen && (
+                                <div style={{
+                                    position: 'absolute', top: 'calc(100% + 10px)', right: 0, zIndex: 1000,
+                                    background: 'rgba(8,15,45,0.92)',
+                                    backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+                                    border: '1px solid rgba(108,190,255,0.2)', borderRadius: '14px',
+                                    padding: '8px', minWidth: '220px',
+                                    boxShadow: '0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
+                                }}>
+                                    {(this.props.canChangeTheme || this.props.canChangeLanguage) && (
+                                        <div>
+                                            <div className="nb-section-label">⚙️ Paramètres</div>
+                                            <SettingsMenu
+                                                canChangeLanguage={this.props.canChangeLanguage}
+                                                canChangeTheme={this.props.canChangeTheme}
+                                                isRtl={this.props.isRtl}
+                                                onRequestClose={this.props.onRequestCloseSettings}
+                                                onRequestOpen={this.props.onClickSettings}
+                                                settingsMenuOpen={this.props.settingsMenuOpen}
+                                            />
+                                            <div className="nb-divider" />
+                                        </div>
+                                    )}
+                                    <div className="nb-section-label">📁 Fichier</div>
+                                    <button className="nb-menu-item" onClick={() => { this.handleClickNew(); this.closeHamburger(); }}>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                                        Nouveau projet
+                                    </button>
+                                    {this.props.canSave && (
+                                        <button className="nb-menu-item" onClick={() => { this.handleClickSave(); this.closeHamburger(); }}>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+                                            Sauvegarder
+                                        </button>
+                                    )}
+                                    <button className="nb-menu-item" onClick={() => { this.props.onStartSelectingFileUpload(); this.closeHamburger(); }}>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                                        Charger un fichier
+                                    </button>
+                                    <SB3Downloader>{(className, downloadProjectCallback) => (
+                                        <button className="nb-menu-item" onClick={() => { this.getSaveToComputerHandler(downloadProjectCallback)(); this.closeHamburger(); }}>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                                            Télécharger
+                                        </button>
+                                    )}</SB3Downloader>
+                                    <div className="nb-divider" />
+                                    <div className="nb-section-label">✏️ Modifier</div>
+                                    <DeletionRestorer>{(handleRestore, { restorable, deletedItem }) => (
+                                        <button className="nb-menu-item" style={{ opacity: restorable ? 1 : 0.4 }}
+                                            onClick={() => { if (restorable) { this.handleRestoreOption(handleRestore)(); this.closeHamburger(); } }}>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 .49-3.96" /></svg>
+                                            {this.restoreOptionMessage(deletedItem)}
+                                        </button>
+                                    )}</DeletionRestorer>
+                                    <TurboMode>{(toggleTurboMode, { turboMode }) => (
+                                        <button className="nb-menu-item" onClick={() => { toggleTurboMode(); this.closeHamburger(); }}>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+                                            {turboMode ? 'Désactiver Turbo' : 'Activer Turbo ⚡'}
+                                        </button>
+                                    )}</TurboMode>
+                                </div>
+                            )}
+                        </div>
+
                     </div>
                 </div>
 
-                {/* show the proper UI in the account menu, given whether the user is
-                logged in, and whether a session is available to log in with */}
                 <div className={styles.accountInfoGroup}>
                     <div className={styles.menuBarItem}>
-                        {this.props.canSave && (
-                            <SaveStatus />
-                        )}
+                        {this.props.canSave && (<SaveStatus />)}
                     </div>
-                    {this.props.sessionExists ? (
-                        this.props.username ? (
-                            // ************ user is logged in ************
-                            <React.Fragment>
-                                <a href="/mystuff/">
-                                    <div
-                                        className={classNames(
-                                            styles.menuBarItem,
-                                            styles.hoverable,
-                                            styles.mystuffButton
-                                        )}
-                                    >
-                                        <img
-                                            className={styles.mystuffIcon}
-                                            src={mystuffIcon}
-                                        />
-                                    </div>
-                                </a>
-                                <AccountNav
-                                    className={classNames(
-                                        styles.menuBarItem,
-                                        styles.hoverable,
-                                        {[styles.active]: this.props.accountMenuOpen}
-                                    )}
-                                    isOpen={this.props.accountMenuOpen}
-                                    isRtl={this.props.isRtl}
-                                    menuBarMenuClassName={classNames(styles.menuBarMenu)}
-                                    onClick={this.props.onClickAccount}
-                                    onClose={this.props.onRequestCloseAccount}
-                                    onLogOut={this.props.onLogOut}
-                                />
-                            </React.Fragment>
-                        ) : (
-                            // ********* user not logged in, but a session exists
-                            // ********* so they can choose to log in
-                            <React.Fragment>
-                                <div
-                                    className={classNames(
-                                        styles.menuBarItem,
-                                        styles.hoverable
-                                    )}
-                                    key="join"
-                                    onMouseUp={this.props.onOpenRegistration}
-                                >
-                                    <FormattedMessage
-                                        defaultMessage="Join Scratch"
-                                        description="Link for creating a Scratch account"
-                                        id="gui.menuBar.joinScratch"
-                                    />
-                                </div>
-                                <div
-                                    className={classNames(
-                                        styles.menuBarItem,
-                                        styles.hoverable
-                                    )}
-                                    key="login"
-                                    onMouseUp={this.props.onClickLogin}
-                                >
-                                    <FormattedMessage
-                                        defaultMessage="Sign in"
-                                        description="Link for signing in to your Scratch account"
-                                        id="gui.menuBar.signIn"
-                                    />
-                                    <LoginDropdown
-                                        className={classNames(styles.menuBarMenu)}
-                                        isOpen={this.props.loginMenuOpen}
-                                        isRtl={this.props.isRtl}
-                                        renderLogin={this.props.renderLogin}
-                                        onClose={this.props.onRequestCloseLogin}
-                                    />
-                                </div>
-                            </React.Fragment>
-                        )
-                    ) : (
-                        // ******** no login session is available, so don't show login stuff
-                        <React.Fragment>
-                            {this.props.showComingSoon ? (
-                                <React.Fragment>
-                                    <MenuBarItemTooltip id="mystuff">
-                                        <div
-                                            className={classNames(
-                                                styles.menuBarItem,
-                                                styles.hoverable,
-                                                styles.mystuffButton
-                                            )}
-                                        >
-                                            <img
-                                                className={styles.mystuffIcon}
-                                                src={mystuffIcon}
-                                            />
-                                        </div>
-                                    </MenuBarItemTooltip>
-                                    <MenuBarItemTooltip
-                                        id="account-nav"
-                                        place={this.props.isRtl ? 'right' : 'left'}
-                                    >
-                                        <div
-                                            className={classNames(
-                                                styles.menuBarItem,
-                                                styles.hoverable,
-                                                styles.accountNavMenu
-                                            )}
-                                        >
-                                            <img
-                                                className={styles.profileIcon}
-                                                src={profileIcon}
-                                            />
-                                            <span>
-                                                {'scratch-cat'}
-                                            </span>
-                                            <img
-                                                className={styles.dropdownCaretIcon}
-                                                src={dropdownCaret}
-                                            />
-                                        </div>
-                                    </MenuBarItemTooltip>
-                                </React.Fragment>
-                            ) : []}
-                        </React.Fragment>
-                    )}
                 </div>
 
                 {aboutButton}
@@ -899,11 +835,11 @@ MenuBar.propTypes = {
     modeMenuOpen: PropTypes.bool,
     modeNow: PropTypes.bool,
     onClickAbout: PropTypes.oneOfType([
-        PropTypes.func, // button mode: call this callback when the About button is clicked
-        PropTypes.arrayOf( // menu mode: list of items in the About menu
+        PropTypes.func,
+        PropTypes.arrayOf(
             PropTypes.shape({
-                title: PropTypes.string, // text for the menu item
-                onClick: PropTypes.func // call this callback when the menu item is clicked
+                title: PropTypes.string,
+                onClick: PropTypes.func
             })
         )
     ]),
@@ -949,7 +885,7 @@ MenuBar.propTypes = {
 
 MenuBar.defaultProps = {
     logo: scratchLogo,
-    onShare: () => {}
+    onShare: () => { }
 };
 
 const mapStateToProps = (state, ownProps) => {

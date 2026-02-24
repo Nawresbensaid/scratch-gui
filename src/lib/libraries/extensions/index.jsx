@@ -1,5 +1,6 @@
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import RobotWebotsExtension from './robot-webots.js';
+import { FormattedMessage } from 'react-intl';
 
 import musicIconURL from './music/music.png';
 import musicInsetIconURL from './music/music-small.svg';
@@ -317,5 +318,16 @@ export default [
             />
         ),
         helpLink: 'https://scratch.mit.edu/vernier'
+    },
+    {
+        name: 'Robot Webots',
+        extensionId: 'robotWebots',
+        description: 'Contrôle un robot dans Webots',
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        internetConnectionRequired: false,
+        helpLink: '',
+        extensionClass: RobotWebotsExtension
     }
 ];
