@@ -9,6 +9,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import tabStyles from 'react-tabs/style/react-tabs.css';
 import VM from 'scratch-vm';
 import ScratchBlocks from 'scratch-blocks';
+import BlocklyEditor from '../../containers/BlocklyEditor.jsx';
+import { OPENBOT_BLOCK_NAMES, OPENBOT_TOOLBOX_CATEGORIES } from '../../lib/openbot-blocks/index.js';
 import Renderer from 'scratch-render';
 
 import Blocks from '../../containers/blocks.jsx';
@@ -162,68 +164,15 @@ const addClickEffect = (e) => {
 
 
 /* ===== BLOCS OPENBOT ===== */
+/* ===== BLOCS OPENBOT — chargés depuis lib/openbot-blocks ===== */
+// Les blocs sont définis dans src/lib/openbot-blocks/customblocks.js
+// Importés automatiquement via index.js
 const defineOpenBotBlocks = () => {
-    const B = ScratchBlocks || window.Blockly;
-    if (!B || !B.Blocks) { console.warn('[OpenBot] ScratchBlocks non dispo'); return; }
-    if (B._openBotDefined) return;
-    B._openBotDefined = true;
-
-    const CM = '#d56235', CS = '#ca3143', CN = '#49a2a5',
-        CSN = '#709662', CL = '#687c9e', CB = '#bf778b', CA = '#458ff7';
-
-    B.Blocks['ob_move_forward'] = { init() { this.jsonInit({ message0: '⬆️ move forward speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
-    B.Blocks['ob_move_backward'] = { init() { this.jsonInit({ message0: '⬇️ move backward speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
-    B.Blocks['ob_move_left'] = { init() { this.jsonInit({ message0: '↩️ move left speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
-    B.Blocks['ob_move_right'] = { init() { this.jsonInit({ message0: '↪️ move right speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
-    B.Blocks['ob_set_motors'] = { init() { this.jsonInit({ message0: '⚙️ left %1 right %2', args0: [{ type: 'field_number', name: 'LEFT', value: 192, min: -255, max: 255 }, { type: 'field_number', name: 'RIGHT', value: 192, min: -255, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
-    B.Blocks['ob_stop'] = { init() { this.jsonInit({ message0: '🛑 stop car immediately', previousStatement: null, nextStatement: null, colour: CS }); } };
-    B.Blocks['ob_wait'] = { init() { this.jsonInit({ message0: '⏱ wait %1 ms', args0: [{ type: 'field_number', name: 'time', value: 3000, min: 0 }], previousStatement: null, nextStatement: null, colour: '#4860b7' }); } };
-    B.Blocks['ob_display_string'] = { init() { this.jsonInit({ message0: '💬 display %1', args0: [{ type: 'field_input', name: 'text', text: 'Hello' }], previousStatement: null, nextStatement: null, colour: '#4860b7' }); } };
-    B.Blocks['ob_sonar'] = { init() { this.jsonInit({ message0: '📡 sonar reading', output: 'Number', colour: CN }); } };
-    B.Blocks['ob_speed_reading'] = { init() { this.jsonInit({ message0: '💨 speed reading', output: 'Number', colour: CN }); } };
-    B.Blocks['ob_gyroscope'] = { init() { this.jsonInit({ message0: '🌀 gyroscope %1', args0: [{ type: 'field_dropdown', name: 'axis', options: [['x', 'x'], ['y', 'y'], ['z', 'z']] }], output: 'Number', colour: CN }); } };
-    B.Blocks['ob_acceleration'] = { init() { this.jsonInit({ message0: '📈 acceleration %1', args0: [{ type: 'field_dropdown', name: 'axis', options: [['x', 'x'], ['y', 'y'], ['z', 'z']] }], output: 'Number', colour: CN }); } };
-    B.Blocks['ob_play_sound'] = { init() { this.jsonInit({ message0: '🔊 play sound %1', args0: [{ type: 'field_input', name: 'text', text: 'move straight' }], previousStatement: null, nextStatement: null, colour: CSN }); } };
-    B.Blocks['ob_sound_speed'] = { init() { this.jsonInit({ message0: '🔉 play %1 speed', args0: [{ type: 'field_dropdown', name: 'type', options: [['slow', 'slow'], ['medium', 'medium'], ['fast', 'fast']] }], previousStatement: null, nextStatement: null, colour: CSN }); } };
-    B.Blocks['ob_brightness'] = { init() { this.jsonInit({ message0: '💡 LED brightness %1', args0: [{ type: 'field_number', name: 'slider', value: 50, min: 0, max: 100 }], previousStatement: null, nextStatement: null, colour: CL }); } };
-    B.Blocks['ob_led_onoff'] = { init() { this.jsonInit({ message0: '💡 LED %1', args0: [{ type: 'field_dropdown', name: 'STATE', options: [['ON', 'on'], ['OFF', 'off']] }], previousStatement: null, nextStatement: null, colour: CL }); } };
-    B.Blocks['ob_indicators'] = { init() { this.jsonInit({ message0: '🔦 %1 indicator %2', args0: [{ type: 'field_dropdown', name: 'side', options: [['left', 'left'], ['right', 'right']] }, { type: 'field_dropdown', name: 'STATE', options: [['ON', 'on'], ['OFF', 'off']] }], previousStatement: null, nextStatement: null, colour: CL }); } };
-    B.Blocks['ob_speed_limit'] = { init() { this.jsonInit({ message0: '🏎️ speed limit %1', args0: [{ type: 'field_dropdown', name: 'type', options: [['slow', "'slow'"], ['medium', "'medium'"], ['fast', "'fast'"]] }], previousStatement: null, nextStatement: null, colour: CB }); } };
-    B.Blocks['ob_drive_mode'] = { init() { this.jsonInit({ message0: '🕹️ drive mode %1', args0: [{ type: 'field_dropdown', name: 'controller', options: [['dual drive', "'dualDrive'"], ['joystick', "'joystick'"], ['game', "'game'"]] }], previousStatement: null, nextStatement: null, colour: CB }); } };
-    B.Blocks['ob_follow'] = { init() { this.jsonInit({ message0: '🧍 follow %1', args0: [{ type: 'field_dropdown', name: 'class', options: [['person', 'person'], ['car', 'car'], ['dog', 'dog'], ['cat', 'cat'], ['bicycle', 'bicycle']] }], previousStatement: null, nextStatement: null, colour: CA }); } };
-    B.Blocks['ob_autopilot'] = { init() { this.jsonInit({ message0: '🧠 enable autopilot', previousStatement: null, nextStatement: null, colour: CA }); } };
-    B.Blocks['ob_navigate'] = { init() { this.jsonInit({ message0: '🗺️ navigate forward %1 cm left %2 cm', args0: [{ type: 'field_number', name: 'forward', value: 0 }, { type: 'field_number', name: 'left', value: 0 }], previousStatement: null, nextStatement: null, colour: CA }); } };
-    B.Blocks['ob_disable_ai'] = { init() { this.jsonInit({ message0: '⛔ disable AI', previousStatement: null, nextStatement: null, colour: CS }); } };
-
-    console.log('[OpenBot] Blocs enregistres OK');
+    // Les blocs sont déjà enregistrés via l'import en haut du fichier
+    console.log('[OpenBot] Blocs chargés depuis lib/openbot-blocks ✅');
 };
 
-const OPENBOT_TOOLBOX_XML = `
-<category name="🤖 OpenBot" colour="#d56235" secondaryColour="#b84e1f">
-  <block type="ob_wait"><field name="time">3000</field></block>
-  <block type="ob_display_string"><field name="text">Hello</field></block>
-  <block type="ob_move_forward"><field name="SPEED">192</field></block>
-  <block type="ob_move_backward"><field name="SPEED">192</field></block>
-  <block type="ob_move_left"><field name="SPEED">192</field></block>
-  <block type="ob_move_right"><field name="SPEED">192</field></block>
-  <block type="ob_set_motors"><field name="LEFT">192</field><field name="RIGHT">192</field></block>
-  <block type="ob_stop"></block>
-  <block type="ob_sonar"></block>
-  <block type="ob_speed_reading"></block>
-  <block type="ob_gyroscope"></block>
-  <block type="ob_acceleration"></block>
-  <block type="ob_play_sound"><field name="text">move straight</field></block>
-  <block type="ob_sound_speed"></block>
-  <block type="ob_brightness"><field name="slider">50</field></block>
-  <block type="ob_led_onoff"></block>
-  <block type="ob_indicators"></block>
-  <block type="ob_speed_limit"></block>
-  <block type="ob_drive_mode"></block>
-  <block type="ob_follow"></block>
-  <block type="ob_autopilot"></block>
-  <block type="ob_navigate"></block>
-  <block type="ob_disable_ai"></block>
-</category>`;
+const OPENBOT_TOOLBOX_XML = OPENBOT_TOOLBOX_CATEGORIES;
 
 /* =============================================
    CONVERTISSEUR BLOCS SCRATCH → PYTHON
@@ -313,15 +262,36 @@ const scratchToPython = (vm) => {
                     'operator_subtract': () => `${inputVal(`NUM1`)} - ${inputVal(`NUM2`)}`,
                     'operator_multiply': () => `${inputVal(`NUM1`)} * ${inputVal(`NUM2`)}`,
                     'operator_divide': () => `${inputVal(`NUM1`)} / ${inputVal(`NUM2`)}`,
-                    // === BLOCS OPENBOT ===
-                    'ob_wait': () => `${pad}robot.wait(ms=${field('time')})`,
-                    'ob_display_string': () => `${pad}robot.display("${field('text')}")`,
-                    'ob_move_forward': () => `${pad}robot.move_forward(speed=${field('SPEED')})`,
-                    'ob_move_backward': () => `${pad}robot.move_backward(speed=${field('SPEED')})`,
-                    'ob_move_left': () => `${pad}robot.turn_left(speed=${field('SPEED')})`,
-                    'ob_move_right': () => `${pad}robot.turn_right(speed=${field('SPEED')})`,
-                    'ob_set_motors': () => `${pad}robot.set_motors(left=${field('LEFT')}, right=${field('RIGHT')})`,
-                    // Anciens opcodes
+                    // === BLOCS OPENBOT (open-code officiel) ===
+                    'start': () => `def programme_principal():`,
+                    'forever': () => `${pad}while True:${NL}${sub('forever_loop_blocks')}`,
+                    'wait': () => `${pad}robot.wait(ms=${field('time')})`,
+                    'display_string': () => `${pad}robot.display("${field('text')}")`,
+                    'display_sensors': () => `${pad}robot.display_sensors()`,
+                    'forwardBackward': () => { const d = field('direction_type'), s = field('slider'); return d === 'moveForward' ? `${pad}robot.move_forward(speed=${s})` : `${pad}robot.move_backward(speed=${s})`; },
+                    'leftRight': () => { const d = field('direction_type'), s = field('slider'); return d === 'moveLeft' ? `${pad}robot.turn_left(speed=${s})` : `${pad}robot.turn_right(speed=${s})`; },
+                    'setMotors': () => `${pad}robot.set_motors(left=${field('left_distance')}, right=${field('right_distance')})`,
+                    'movementStop': () => `${pad}robot.stop()`,
+                    'sonarReading': () => `robot.sonar()`,
+                    'speedReading': () => `robot.speed()`,
+                    'voltageDivider': () => `robot.voltage()`,
+                    'gyroscopeReading': () => `robot.gyroscope("${field('axis')}")`,
+                    'accelerationReading': () => `robot.acceleration("${field('axis')}")`,
+                    'magneticReading': () => `robot.magnetic("${field('axis')}")`,
+                    'wheelOdometer': () => `robot.wheel_odometry("${field('wheel_sensors')}")`,
+                    'inputSound': () => `${pad}robot.play_sound(text="${field('text')}")`,
+                    'soundType': () => `${pad}robot.play_sound(speed="${field('type')}")`,
+                    'soundMode': () => `${pad}robot.play_sound(mode="${field('mode_type')}")`,
+                    'speedControl': () => `${pad}robot.set_speed("${field('type')}")`,
+                    'driveModeControls': () => `${pad}robot.set_drive_mode("${field('controller')}")`,
+                    'brightness': () => `${pad}robot.set_brightness(${field('slider')})`,
+                    'ledOnOff': () => `${pad}robot.led("${field('TOGGLE_STATE')}")`,
+                    'indicators': () => `${pad}robot.indicator(side="${field('side')}", state="${field('TOGGLE_STATE')}")`,
+                    'objectTracking': () => `${pad}robot.follow("${field('class')}")`,
+                    'autopilot': () => `${pad}robot.autopilot()`,
+                    'navigateForwardAndLeft': () => `${pad}robot.navigate(forward=${field('forward')}, left=${field('left')})`,
+                    'disableAI': () => `${pad}robot.disable_ai()`,
+                    // Compatibilité anciens blocs
                     'ob_move_forward_backward': () => {
                         const dir = field(`direction_type`);
                         const spd = field(`slider`);
@@ -566,15 +536,7 @@ class GUIComponent extends React.Component {
             }
         };
         setTimeout(() => injectToolbox(0), 2000);
-        // Poll for block changes every 800ms
-        this.blockUpdateTimer = setInterval(() => {
-            if (this.state.pythonEditedManually) return;
-            const { vm } = this.props;
-            const generated = scratchToPython(vm);
-            if (generated && generated !== this.state.pythonCode) {
-                this.setState({ pythonCode: generated });
-            }
-        }, 800);
+        // Code Python généré directement par BlocklyEditor via onCodeChange
     }
     onMouseDownSplitter(e) { e.preventDefault(); this.setState({ isDragging: true }); }
     onMouseDownVertSplitter(e) { e.preventDefault(); this.setState({ isDraggingVert: true }); }
@@ -750,7 +712,11 @@ class GUIComponent extends React.Component {
                                         </TabList>
                                         <TabPanel className={tabClassNames.tabPanel} style={{ height: '100%' }}>
                                             <Box className={styles.blocksWrapper} style={{ height: '100%' }}>
-                                                <Blocks key={`${blocksId}/${theme}`} canUseCloud={canUseCloud} grow={1} isVisible={blocksTabVisible} options={{ media: `${basePath}static/${themeMap[theme].blocksMediaFolder}/` }} stageSize={stageSize} theme={theme} vm={vm} />
+                                                <BlocklyEditor onCodeChange={(code) => {
+                                                    if (!this.state.pythonEditedManually) {
+                                                        this.setState({ pythonCode: code });
+                                                    }
+                                                }} />
                                             </Box>
                                             <Box className={styles.extensionButtonContainer}>
                                                 <button className={styles.extensionButton} title={intl.formatMessage(messages.addExtension)} onClick={onExtensionButtonClick} style={{ background: 'linear-gradient(135deg, rgba(0,80,180,0.9), rgba(108,190,255,0.7))', border: '2px solid rgba(108,190,255,0.7)', borderRadius: '50%', boxShadow: '0 0 20px rgba(108,190,255,0.5)' }}>

@@ -32,6 +32,9 @@
     }
   },
   "dependencies": {
+    "@blockly/block-plus-minus": "^9.0.9",
+    "@blockly/field-date": "^10.0.8",
+    "@blockly/field-slider": "^8.0.8",
     "@microbit/microbit-universal-hex": "^0.2.2",
     "arraybuffer-loader": "^1.0.6",
     "autoprefixer": "^9.0.1",
