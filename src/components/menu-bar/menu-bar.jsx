@@ -251,7 +251,6 @@ const navbarCSS = `
     border-radius: 10px;
     color: #FF00FF;
     font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
-    animation: levelUp 3s ease-in-out infinite;
 }
 .leaderboard-panel {
     position: absolute;

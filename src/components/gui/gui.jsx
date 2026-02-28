@@ -8,6 +8,7 @@ import MediaQuery from 'react-responsive';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import tabStyles from 'react-tabs/style/react-tabs.css';
 import VM from 'scratch-vm';
+import ScratchBlocks from 'scratch-blocks';
 import Renderer from 'scratch-render';
 
 import Blocks from '../../containers/blocks.jsx';
@@ -91,6 +92,19 @@ const cockpitCSS = `
     background: rgba(108,190,255,0.9) !important;
     box-shadow: 0 0 16px rgba(108,190,255,0.7) !important;
 }
+/* ── Boutons zoom SVG ── */
+g.blocklyZoom image { filter: invert(1) brightness(0.6) sepia(1) saturate(3) hue-rotate(180deg) !important; }
+g.blocklyZoom rect { fill: rgba(6,12,40,0.9) !important; stroke: rgba(108,190,255,0.3) !important; }
+/* ── Fix tab "Code" blanc ── */
+[class*="tabs"] { background: transparent !important; }
+[class*="tabList"] { background: rgba(10,25,55,0.65) !important; border-bottom: 1px solid rgba(108,190,255,0.2) !important; }
+[class*="tab_"] { background: transparent !important; color: #6bceff !important; border: none !important; border-bottom: 2px solid transparent !important; }
+[class*="isSelected"] { background: transparent !important; color: #fff !important; border-bottom: 2px solid #6bceff !important; box-shadow: none !important; }
+[class*="tab_"]:hover { background: rgba(108,190,255,0.08) !important; }
+/* Tab panel */
+[class*="tabPanel"] { background: transparent !important; }
+/* Header "Code" box blanc */
+[class*="headerSection"] { background: transparent !important; }
 textarea:focus { outline: none; box-shadow: none; }
 textarea::-webkit-scrollbar { width: 5px; height: 5px; }
 textarea::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
@@ -145,6 +159,72 @@ const addClickEffect = (e) => {
 
 
 
+
+
+/* ===== BLOCS OPENBOT ===== */
+const defineOpenBotBlocks = () => {
+    const B = ScratchBlocks || window.Blockly;
+    if (!B || !B.Blocks) { console.warn('[OpenBot] ScratchBlocks non dispo'); return; }
+    if (B._openBotDefined) return;
+    B._openBotDefined = true;
+
+    const CM = '#d56235', CS = '#ca3143', CN = '#49a2a5',
+        CSN = '#709662', CL = '#687c9e', CB = '#bf778b', CA = '#458ff7';
+
+    B.Blocks['ob_move_forward'] = { init() { this.jsonInit({ message0: '⬆️ move forward speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
+    B.Blocks['ob_move_backward'] = { init() { this.jsonInit({ message0: '⬇️ move backward speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
+    B.Blocks['ob_move_left'] = { init() { this.jsonInit({ message0: '↩️ move left speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
+    B.Blocks['ob_move_right'] = { init() { this.jsonInit({ message0: '↪️ move right speed %1', args0: [{ type: 'field_number', name: 'SPEED', value: 192, min: 0, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
+    B.Blocks['ob_set_motors'] = { init() { this.jsonInit({ message0: '⚙️ left %1 right %2', args0: [{ type: 'field_number', name: 'LEFT', value: 192, min: -255, max: 255 }, { type: 'field_number', name: 'RIGHT', value: 192, min: -255, max: 255 }], previousStatement: null, nextStatement: null, colour: CM }); } };
+    B.Blocks['ob_stop'] = { init() { this.jsonInit({ message0: '🛑 stop car immediately', previousStatement: null, nextStatement: null, colour: CS }); } };
+    B.Blocks['ob_wait'] = { init() { this.jsonInit({ message0: '⏱ wait %1 ms', args0: [{ type: 'field_number', name: 'time', value: 3000, min: 0 }], previousStatement: null, nextStatement: null, colour: '#4860b7' }); } };
+    B.Blocks['ob_display_string'] = { init() { this.jsonInit({ message0: '💬 display %1', args0: [{ type: 'field_input', name: 'text', text: 'Hello' }], previousStatement: null, nextStatement: null, colour: '#4860b7' }); } };
+    B.Blocks['ob_sonar'] = { init() { this.jsonInit({ message0: '📡 sonar reading', output: 'Number', colour: CN }); } };
+    B.Blocks['ob_speed_reading'] = { init() { this.jsonInit({ message0: '💨 speed reading', output: 'Number', colour: CN }); } };
+    B.Blocks['ob_gyroscope'] = { init() { this.jsonInit({ message0: '🌀 gyroscope %1', args0: [{ type: 'field_dropdown', name: 'axis', options: [['x', 'x'], ['y', 'y'], ['z', 'z']] }], output: 'Number', colour: CN }); } };
+    B.Blocks['ob_acceleration'] = { init() { this.jsonInit({ message0: '📈 acceleration %1', args0: [{ type: 'field_dropdown', name: 'axis', options: [['x', 'x'], ['y', 'y'], ['z', 'z']] }], output: 'Number', colour: CN }); } };
+    B.Blocks['ob_play_sound'] = { init() { this.jsonInit({ message0: '🔊 play sound %1', args0: [{ type: 'field_input', name: 'text', text: 'move straight' }], previousStatement: null, nextStatement: null, colour: CSN }); } };
+    B.Blocks['ob_sound_speed'] = { init() { this.jsonInit({ message0: '🔉 play %1 speed', args0: [{ type: 'field_dropdown', name: 'type', options: [['slow', 'slow'], ['medium', 'medium'], ['fast', 'fast']] }], previousStatement: null, nextStatement: null, colour: CSN }); } };
+    B.Blocks['ob_brightness'] = { init() { this.jsonInit({ message0: '💡 LED brightness %1', args0: [{ type: 'field_number', name: 'slider', value: 50, min: 0, max: 100 }], previousStatement: null, nextStatement: null, colour: CL }); } };
+    B.Blocks['ob_led_onoff'] = { init() { this.jsonInit({ message0: '💡 LED %1', args0: [{ type: 'field_dropdown', name: 'STATE', options: [['ON', 'on'], ['OFF', 'off']] }], previousStatement: null, nextStatement: null, colour: CL }); } };
+    B.Blocks['ob_indicators'] = { init() { this.jsonInit({ message0: '🔦 %1 indicator %2', args0: [{ type: 'field_dropdown', name: 'side', options: [['left', 'left'], ['right', 'right']] }, { type: 'field_dropdown', name: 'STATE', options: [['ON', 'on'], ['OFF', 'off']] }], previousStatement: null, nextStatement: null, colour: CL }); } };
+    B.Blocks['ob_speed_limit'] = { init() { this.jsonInit({ message0: '🏎️ speed limit %1', args0: [{ type: 'field_dropdown', name: 'type', options: [['slow', "'slow'"], ['medium', "'medium'"], ['fast', "'fast'"]] }], previousStatement: null, nextStatement: null, colour: CB }); } };
+    B.Blocks['ob_drive_mode'] = { init() { this.jsonInit({ message0: '🕹️ drive mode %1', args0: [{ type: 'field_dropdown', name: 'controller', options: [['dual drive', "'dualDrive'"], ['joystick', "'joystick'"], ['game', "'game'"]] }], previousStatement: null, nextStatement: null, colour: CB }); } };
+    B.Blocks['ob_follow'] = { init() { this.jsonInit({ message0: '🧍 follow %1', args0: [{ type: 'field_dropdown', name: 'class', options: [['person', 'person'], ['car', 'car'], ['dog', 'dog'], ['cat', 'cat'], ['bicycle', 'bicycle']] }], previousStatement: null, nextStatement: null, colour: CA }); } };
+    B.Blocks['ob_autopilot'] = { init() { this.jsonInit({ message0: '🧠 enable autopilot', previousStatement: null, nextStatement: null, colour: CA }); } };
+    B.Blocks['ob_navigate'] = { init() { this.jsonInit({ message0: '🗺️ navigate forward %1 cm left %2 cm', args0: [{ type: 'field_number', name: 'forward', value: 0 }, { type: 'field_number', name: 'left', value: 0 }], previousStatement: null, nextStatement: null, colour: CA }); } };
+    B.Blocks['ob_disable_ai'] = { init() { this.jsonInit({ message0: '⛔ disable AI', previousStatement: null, nextStatement: null, colour: CS }); } };
+
+    console.log('[OpenBot] Blocs enregistres OK');
+};
+
+const OPENBOT_TOOLBOX_XML = `
+<category name="🤖 OpenBot" colour="#d56235" secondaryColour="#b84e1f">
+  <block type="ob_wait"><field name="time">3000</field></block>
+  <block type="ob_display_string"><field name="text">Hello</field></block>
+  <block type="ob_move_forward"><field name="SPEED">192</field></block>
+  <block type="ob_move_backward"><field name="SPEED">192</field></block>
+  <block type="ob_move_left"><field name="SPEED">192</field></block>
+  <block type="ob_move_right"><field name="SPEED">192</field></block>
+  <block type="ob_set_motors"><field name="LEFT">192</field><field name="RIGHT">192</field></block>
+  <block type="ob_stop"></block>
+  <block type="ob_sonar"></block>
+  <block type="ob_speed_reading"></block>
+  <block type="ob_gyroscope"></block>
+  <block type="ob_acceleration"></block>
+  <block type="ob_play_sound"><field name="text">move straight</field></block>
+  <block type="ob_sound_speed"></block>
+  <block type="ob_brightness"><field name="slider">50</field></block>
+  <block type="ob_led_onoff"></block>
+  <block type="ob_indicators"></block>
+  <block type="ob_speed_limit"></block>
+  <block type="ob_drive_mode"></block>
+  <block type="ob_follow"></block>
+  <block type="ob_autopilot"></block>
+  <block type="ob_navigate"></block>
+  <block type="ob_disable_ai"></block>
+</category>`;
+
 /* =============================================
    CONVERTISSEUR BLOCS SCRATCH → PYTHON
    ============================================= */
@@ -172,6 +252,8 @@ const scratchToPython = (vm) => {
                 }
             }
             const roots = allIds.filter(id => !childIds.has(id) && blocks[id]);
+            // Si pas de bloc déclencheur, envelopper dans programme_principal
+            const hasEvent = roots.some(id => blocks[id] && blocks[id].opcode && blocks[id].opcode.startsWith('event_'));
 
             const blockToCode = (id, indent) => {
                 if (!id || !blocks[id]) return ``;
@@ -231,6 +313,70 @@ const scratchToPython = (vm) => {
                     'operator_subtract': () => `${inputVal(`NUM1`)} - ${inputVal(`NUM2`)}`,
                     'operator_multiply': () => `${inputVal(`NUM1`)} * ${inputVal(`NUM2`)}`,
                     'operator_divide': () => `${inputVal(`NUM1`)} / ${inputVal(`NUM2`)}`,
+                    // === BLOCS OPENBOT ===
+                    'ob_wait': () => `${pad}robot.wait(ms=${field('time')})`,
+                    'ob_display_string': () => `${pad}robot.display("${field('text')}")`,
+                    'ob_move_forward': () => `${pad}robot.move_forward(speed=${field('SPEED')})`,
+                    'ob_move_backward': () => `${pad}robot.move_backward(speed=${field('SPEED')})`,
+                    'ob_move_left': () => `${pad}robot.turn_left(speed=${field('SPEED')})`,
+                    'ob_move_right': () => `${pad}robot.turn_right(speed=${field('SPEED')})`,
+                    'ob_set_motors': () => `${pad}robot.set_motors(left=${field('LEFT')}, right=${field('RIGHT')})`,
+                    // Anciens opcodes
+                    'ob_move_forward_backward': () => {
+                        const dir = field(`direction_type`);
+                        const spd = field(`slider`);
+                        return dir === 'moveForward'
+                            ? `${pad}robot.move_forward(speed=${spd})`
+                            : `${pad}robot.move_backward(speed=${spd})`;
+                    },
+                    'ob_move_left_right': () => {
+                        const dir = field(`direction_type`);
+                        const spd = field(`slider`);
+                        return dir === 'moveLeft'
+                            ? `${pad}robot.turn_left(speed=${spd})`
+                            : `${pad}robot.turn_right(speed=${spd})`;
+                    },
+                    'ob_move_motors': () => `${pad}robot.set_motors(left=${field(`left_distance`)}, right=${field(`right_distance`)})`,
+                    'ob_stop': () => `${pad}robot.stop()`,
+                    // Capteurs
+                    'ob_sonar': () => `robot.sonar()`,
+                    'ob_speed_reading': () => `robot.speed()`,
+                    'ob_voltage': () => `robot.voltage()`,
+                    'ob_wheel_odometer': () => `robot.wheel_odometry("${field(`wheel_sensors`)}")`,
+                    'ob_gyroscope': () => `robot.gyroscope("${field(`axis`)}")`,
+                    'ob_acceleration': () => `robot.acceleration("${field(`axis`)}")`,
+                    'ob_magnetic': () => `robot.magnetic("${field(`axis`)}")`,
+                    // Son
+                    'ob_sound_speed': () => `${pad}robot.play_sound(speed="${field(`type`)}")`,
+                    'ob_sound_mode': () => `${pad}robot.play_sound(mode="${field(`mode_type`)}")`,
+                    'ob_input_sound': () => `${pad}robot.play_sound(text="${field(`text`)}")`,
+                    // Vitesse / Mode
+                    'ob_speed_control': () => `${pad}robot.set_speed("${field(`type`)}")`,
+                    'ob_drive_mode': () => `${pad}robot.set_drive_mode("${field(`controller`)}")`,
+                    // LED
+                    'ob_brightness': () => `${pad}robot.set_brightness(${field(`slider`)})`,
+                    'ob_brightness_onoff': () => `${pad}robot.led("${field(`TOGGLE_STATE`)}")`,
+                    'ob_indicators': () => `${pad}robot.indicator(side="${field(`side`)}", state="${field(`TOGGLE_STATE`)}")`,
+                    // IA
+                    'ob_object_tracking': () => `${pad}robot.follow("${field(`class`)}")`,
+                    'ob_autopilot': () => `${pad}robot.autopilot()`,
+                    'ob_navigate': () => `${pad}robot.navigate(forward=${field(`forward`)}, left=${field(`left`)})`,
+                    'ob_disable_ai': () => `${pad}robot.disable_ai()`,
+                    'openbot_move_forward': () => `${pad}robot.move_forward(speed=${field(`SPEED`)})`,
+                    'openbot_move_backward': () => `${pad}robot.move_backward(speed=${field(`SPEED`)})`,
+                    'openbot_turn_left': () => `${pad}robot.turn_left(angle=${field(`ANGLE`)})`,
+                    'openbot_turn_right': () => `${pad}robot.turn_right(angle=${field(`ANGLE`)})`,
+                    'openbot_stop': () => `${pad}robot.stop()`,
+                    'openbot_set_motors': () => `${pad}robot.set_motors(left=${field(`LEFT`)}, right=${field(`RIGHT`)})`,
+                    'openbot_wait': () => `${pad}robot.wait(seconds=${field(`SECONDS`)})`,
+                    'openbot_sonar': () => `robot.get_distance()`,
+                    'openbot_if_obstacle': () => `robot.get_distance() < ${field(`DIST`)}`,
+                    'openbot_led': () => `${pad}robot.led("${field(`STATE`)}")`,
+                    'openbot_led_brightness': () => `${pad}robot.led_brightness(${field(`BRIGHTNESS`)})`,
+                    'openbot_follow_person': () => `${pad}robot.follow_person()`,
+                    'openbot_avoid_obstacles': () => `${pad}robot.avoid_obstacles()`,
+                    'openbot_autopilot': () => `${pad}robot.autopilot()`,
+
                 };
 
                 if (opMap[op]) {
@@ -248,8 +394,16 @@ const scratchToPython = (vm) => {
             };
 
             for (const rootId of roots) {
+                const b = blocks[rootId];
+                if (!b) continue;
                 const code = blockToCode(rootId, 0);
-                if (code && code.trim()) {
+                if (!code || !code.trim()) continue;
+                // Si c'est un bloc orphelin (pas un event), l'envelopper
+                if (!b.opcode.startsWith('event_') && !hasEvent) {
+                    lines.push(`def programme_principal():`);
+                    code.split('\n').forEach(l => lines.push(`    ${l}`));
+                    lines.push(``);
+                } else {
                     lines.push(code);
                     lines.push(``);
                 }
@@ -289,7 +443,10 @@ class GUIComponent extends React.Component {
             isDraggingVert: false,
             pythonCode: PYTHON_DEFAULT,
             pythonEditedManually: false,
+            webotsConnected: false,
+            executing: false,
         };
+        this.ws = null;
         this.blockUpdateTimer = null;
         this.containerRef = React.createRef();
         this.rightPanelRef = React.createRef();
@@ -298,6 +455,63 @@ class GUIComponent extends React.Component {
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
     }
+    connectWebots() {
+        try {
+            this.ws = new WebSocket('ws://localhost:8765/scratch');
+            this.ws.onopen = () => {
+                this.setState({ webotsConnected: true });
+                console.log('[Webots] Connecté !');
+            };
+            this.ws.onclose = () => {
+                this.setState({ webotsConnected: false });
+                setTimeout(() => this.connectWebots(), 3000);
+            };
+            this.ws.onerror = () => {
+                this.setState({ webotsConnected: false });
+            };
+        } catch (e) {
+            setTimeout(() => this.connectWebots(), 3000);
+        }
+    }
+
+    executeCode() {
+        const { pythonCode } = this.state;
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            alert('Robot Webots non connecté !\nLance server.py d\'abord.');
+            return;
+        }
+        this.setState({ executing: true });
+        // Parser le code Python et envoyer les commandes
+        const lines = pythonCode.split('\n');
+        let delay = 0;
+        lines.forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith('#')) return;
+            // Extraire la commande robot.xxx(...)
+            const match = trimmed.match(/robot\.([a-z_]+)\((.*)\)/);
+            if (!match) return;
+            const cmd = match[1];
+            const argsStr = match[2];
+            // Parser les arguments
+            const args = {};
+            argsStr.split(',').forEach(a => {
+                const kv = a.trim().split('=');
+                if (kv.length === 2) args[kv[0].trim()] = parseFloat(kv[1].trim()) || kv[1].trim();
+            });
+            setTimeout(() => {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({ command: cmd, ...args }));
+                }
+                // Attendre les commandes wait
+                if (cmd === 'wait' || cmd === 'attendre') {
+                    delay += args.ms || (args.secondes * 1000) || 1000;
+                }
+            }, delay);
+            delay += 100; // délai entre commandes
+        });
+        setTimeout(() => this.setState({ executing: false }), delay + 500);
+    }
+
     componentWillUnmount() {
         document.removeEventListener('mousemove', this.onMouseMove);
         document.removeEventListener('mouseup', this.onMouseUp);
@@ -306,6 +520,52 @@ class GUIComponent extends React.Component {
     componentDidMount() {
         document.addEventListener('mousemove', this.onMouseMove);
         document.addEventListener('mouseup', this.onMouseUp);
+        // Enregistrer les blocs OpenBot dans Blockly
+        // Connexion WebSocket au serveur Webots
+        this.connectWebots();
+        // Enregistrer blocs OpenBot
+        defineOpenBotBlocks();
+        // Injecter catégorie dans toolbox
+        const OB_BLOCKS = [
+            'ob_wait', 'ob_display_string', 'ob_move_forward', 'ob_move_backward',
+            'ob_move_left', 'ob_move_right', 'ob_set_motors', 'ob_stop',
+            'ob_sonar', 'ob_speed_reading', 'ob_gyroscope', 'ob_acceleration',
+            'ob_play_sound', 'ob_sound_speed', 'ob_brightness', 'ob_led_onoff',
+            'ob_indicators', 'ob_speed_limit', 'ob_drive_mode',
+            'ob_follow', 'ob_autopilot', 'ob_navigate', 'ob_disable_ai'
+        ];
+        const injectToolbox = (tries) => {
+            if (tries > 30) return;
+            const B = window.Blockly;
+            if (!B) { setTimeout(() => injectToolbox(tries + 1), 500); return; }
+            const workspace = B.getMainWorkspace && B.getMainWorkspace();
+            if (!workspace) { setTimeout(() => injectToolbox(tries + 1), 500); return; }
+            try {
+                const toolboxXml = workspace.options.languageTree;
+                if (!toolboxXml) { setTimeout(() => injectToolbox(tries + 1), 500); return; }
+                if (toolboxXml.querySelector('[name*="OpenBot"]')) return;
+
+                // 1. Enregistrer le callback OPENBOT dans le workspace
+                workspace.registerToolboxCategoryCallback('OPENBOT', () => {
+                    return OB_BLOCKS.map(type => {
+                        const el = document.createElement('block');
+                        el.setAttribute('type', type);
+                        return el;
+                    });
+                });
+
+                // 2. Ajouter la catégorie avec custom="OPENBOT"
+                const obXml = `<category name="🤖 OpenBot" colour="#d56235" secondaryColour="#b84e1f" custom="OPENBOT"></category>`;
+                const cat = new DOMParser().parseFromString(obXml, 'text/xml').documentElement;
+                toolboxXml.appendChild(cat);
+                workspace.updateToolbox(toolboxXml);
+                console.log('[OpenBot] Toolbox + callback OK ✅');
+            } catch (e) {
+                console.warn('[OpenBot] Erreur:', e.message);
+                setTimeout(() => injectToolbox(tries + 1), 500);
+            }
+        };
+        setTimeout(() => injectToolbox(0), 2000);
         // Poll for block changes every 800ms
         this.blockUpdateTimer = setInterval(() => {
             if (this.state.pythonEditedManually) return;
@@ -523,6 +783,7 @@ class GUIComponent extends React.Component {
                                 <div style={{ height: `${vertSplitPct}%`, display: 'flex', flexDirection: 'column', overflow: 'hidden', flexShrink: 0, background: 'rgba(3,7,18,0.97)' }}>
                                     {/* Header Python */}
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', flexShrink: 0, background: 'rgba(108,190,255,0.06)', borderBottom: '1px solid rgba(108,190,255,0.15)' }}>
+                                        <span style={{ fontSize: '13px' }}>🐍</span>
                                         <span style={{ color: '#6bceff', fontWeight: '800', fontSize: '11px', letterSpacing: '2px', fontFamily: 'monospace', textShadow: '0 0 8px rgba(108,190,255,0.6)' }}>CODE PYTHON</span>
                                         <div style={{ flex: 1 }} />
                                         {this.state.pythonEditedManually && (
@@ -592,16 +853,46 @@ class GUIComponent extends React.Component {
                                     <div style={{ position: 'absolute', top: '16px', left: '50%', transform: 'translateX(-50%)', fontWeight: 'bold', fontSize: '16px', letterSpacing: '3px', textTransform: 'uppercase', zIndex: 10, whiteSpace: 'nowrap', background: 'linear-gradient(90deg, #6bceff, #c084fc, #ff6b6b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.9))' }}>🌌 Simulateur Robot 🤖</div>
 
                                     <div style={{ position: 'absolute', top: '52px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '10px', zIndex: 10 }}>
-                                        <div className="hud-blink" style={{ padding: '3px 12px', borderRadius: '4px', background: 'rgba(255,60,60,0.12)', border: '1px solid rgba(255,80,80,0.5)', color: '#ff6b6b', fontSize: '10px', letterSpacing: '2px', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold', fontFamily: 'monospace' }}>
-                                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ff6b6b', display: 'inline-block', boxShadow: '0 0 8px #ff6b6b' }} />
-                                            OFFLINE
+                                        <div style={{ padding: '3px 12px', borderRadius: '4px', background: this.state.webotsConnected ? 'rgba(0,255,136,0.12)' : 'rgba(255,60,60,0.12)', border: `1px solid ${this.state.webotsConnected ? 'rgba(0,255,136,0.5)' : 'rgba(255,80,80,0.5)'}`, color: this.state.webotsConnected ? '#4fffb0' : '#ff6b6b', fontSize: '10px', letterSpacing: '2px', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold', fontFamily: 'monospace' }}>
+                                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: this.state.webotsConnected ? '#4fffb0' : '#ff6b6b', display: 'inline-block', boxShadow: `0 0 8px ${this.state.webotsConnected ? '#4fffb0' : '#ff6b6b'}` }} />
+                                            {this.state.webotsConnected ? 'ONLINE' : 'OFFLINE'}
                                         </div>
-
+                                        <div style={{ padding: '3px 12px', borderRadius: '4px', background: 'rgba(108,190,255,0.1)', border: '1px solid rgba(108,190,255,0.35)', color: '#6bceff', fontSize: '10px', letterSpacing: '2px', fontWeight: 'bold', fontFamily: 'monospace' }}>WEBOTS LOCAL</div>
                                     </div>
 
-                                    <div style={{ width: '88%', height: '68%', border: '2px solid transparent', borderRadius: '16px', background: 'linear-gradient(rgba(5,12,32,0.9), rgba(5,12,32,0.9)) padding-box, linear-gradient(135deg, rgba(100,170,255,0.5), rgba(40,80,180,0.3), rgba(80,140,240,0.5)) border-box', boxShadow: '0 0 0 4px rgba(10,20,50,0.8), 0 0 40px rgba(40,100,220,0.12), inset 0 0 60px rgba(0,0,0,0.5)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' }}>
-                                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'radial-gradient(ellipse 70% 50% at 30% 0%, rgba(100,170,255,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                                        <div style={{ fontSize: '56px', filter: 'drop-shadow(0 0 20px rgba(80,160,255,0.4))' }}>🤖</div>
+                                    <div style={{ width: '96%', height: '72%', display: 'flex', gap: '8px', position: 'relative' }}>
+                                        {/* Caméra robot — vue frontale */}
+                                        <div style={{ flex: 1, borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(108,190,255,0.3)', background: 'rgba(3,7,20,0.9)', position: 'relative' }}>
+                                            <div style={{ position: 'absolute', top: '8px', left: '8px', zIndex: 5, background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px', color: '#6bceff', fontSize: '9px', fontFamily: 'monospace', letterSpacing: '1px' }}>📷 CAM ROBOT</div>
+                                            {this.state.webotsConnected ? (
+                                                <img
+                                                    src="http://localhost:8766"
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    alt="Camera Robot"
+                                                />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                                    <div style={{ fontSize: '36px', opacity: 0.4 }}>📷</div>
+                                                    <div style={{ color: 'rgba(108,190,255,0.4)', fontSize: '10px', fontFamily: 'monospace' }}>EN ATTENTE</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {/* Vue overhead — vue de dessus */}
+                                        <div style={{ flex: 1, borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(192,132,252,0.3)', background: 'rgba(3,7,20,0.9)', position: 'relative' }}>
+                                            <div style={{ position: 'absolute', top: '8px', left: '8px', zIndex: 5, background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px', color: '#c084fc', fontSize: '9px', fontFamily: 'monospace', letterSpacing: '1px' }}>🔭 VUE DESSUS</div>
+                                            {this.state.webotsConnected ? (
+                                                <img
+                                                    src="http://localhost:8767"
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    alt="Vue Overhead"
+                                                />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                                    <div style={{ fontSize: '36px', opacity: 0.4 }}>🔭</div>
+                                                    <div style={{ color: 'rgba(192,132,252,0.4)', fontSize: '10px', fontFamily: 'monospace' }}>EN ATTENTE</div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                     <div style={{ position: 'absolute', bottom: '14px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '6px', zIndex: 10, alignItems: 'center' }}>

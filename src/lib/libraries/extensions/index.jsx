@@ -329,5 +329,16 @@ export default [
         internetConnectionRequired: false,
         helpLink: '',
         extensionClass: RobotWebotsExtension
+    },
+    {
+        name: 'OpenBot',
+        extensionId: 'openbot',
+        description: 'Contrôle le robot OpenBot',
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        internetConnectionRequired: false,
+        helpLink: 'https://www.openbot.org'
     }
 ];
+
